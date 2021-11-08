@@ -14,8 +14,8 @@ while getopts ":a:r:b:p:h" o; do case "${o}" in
 	*) printf "Invalid option: -%s\\n" "$OPTARG" && exit 1 ;;
 esac done
 
-[ -z "$dotfilesrepo" ] && dotfilesrepo="https://github.com/lukesmithxyz/voidrice.git"
-[ -z "$progsfile" ] && progsfile="https://raw.githubusercontent.com/LukeSmithxyz/LARBS/master/progs.csv"
+[ -z "$dotfilesrepo" ] && dotfilesrepo="https://github.com/diegosanchezp/archrice.git"
+[ -z "$progsfile" ] && progsfile="https://raw.githubusercontent.com/diegosanchezp/LARBS/master/progs.csv"
 [ -z "$aurhelper" ] && aurhelper="yay"
 [ -z "$repobranch" ] && repobranch="master"
 
@@ -144,7 +144,11 @@ putgitrepo() { # Downloads a gitrepo $1 and places the files in $2 only overwrit
 	[ ! -d "$2" ] && mkdir -p "$2"
 	chown "$name":wheel "$dir" "$2"
 	sudo -u "$name" git clone --recursive -b "$branch" --depth 1 --recurse-submodules "$1" "$dir" >/dev/null 2>&1
-	sudo -u "$name" cp -rfT "$dir" "$2"
+	# --- Install or copy dotfiles with stow ---
+	# Install the stow ignore file First
+	stow --verbose --dir="$dir" --target="$2" "stow"
+	# Then install everything else
+	stow --verbose --dir="$dir" --target="$2" */
 	}
 
 systembeepoff() { dialog --infobox "Getting rid of that retarded error beep sound..." 10 50
@@ -186,7 +190,7 @@ for x in curl ca-certificates base-devel git ntp zsh ; do
 done
 
 dialog --title "LARBS Installation" --infobox "Synchronizing system time to ensure successful and secure installation of software..." 4 70
-ntpdate 0.us.pool.ntp.org >/dev/null 2>&1
+sntp pool.ntp.org >/dev/null 2>&1
 
 adduserandpass || error "Error adding username and/or password."
 
@@ -233,7 +237,8 @@ chsh -s /bin/zsh "$name" >/dev/null 2>&1
 sudo -u "$name" mkdir -p "/home/$name/.cache/zsh/"
 
 # dbus UUID must be generated for Artix runit.
-dbus-uuidgen > /var/lib/dbus/machine-id
+dbus-uuidgen --ensure
+# dbus-uuidgen > /var/lib/dbus/machine-id
 
 # Use system notifications for Brave on Artix
 echo "export \$(dbus-launch)" > /etc/profile.d/dbus.sh
