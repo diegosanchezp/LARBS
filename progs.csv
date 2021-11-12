@@ -66,4 +66,5 @@ G,https://github.com/lukesmithxyz/st.git,"is my custom build of suckless's termi
 ,lightdm,"A lightweight display manager"
 ,man,"An interface to the system reference manuals"
 ,man-db,"A utility for reading man pages"
-,polybar,"A fast and easy-to-use status bar"
+A,polybar,"A fast and easy-to-use status bar"
+P,pywal, "Generate and change color-schemes on the fly"
