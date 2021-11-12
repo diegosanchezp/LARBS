@@ -269,6 +269,9 @@ newperms "%wheel ALL=(ALL) ALL #LARBS
 # Enable lightdm
 systemctl enable lightdm
 
+# Get wallpaper
+curl --create-dirs -L --output "/home/$name/wallpapers/canyon.jpg" https://w.wallhaven.cc/full/47/wallhaven-4767ze.jpg
+
 # Last message! Install complete!
 finalize
 clear
