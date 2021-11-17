@@ -142,13 +142,16 @@ putgitrepo() { # Downloads a gitrepo $1 and places the files in $2 only overwrit
 	[ -z "$3" ] && branch="master" || branch="$repobranch"
 	[ ! -d "$2" ] && mkdir -p "$2"
 	chown "$name":wheel "$dir" "$2"
-	sudo -u "$name" git clone --recursive -b "$branch" --depth 1 --recurse-submodules "$1"
+
+	repodirname="$2/archrice"
+
+	sudo -u "$name" git clone --recursive -b "$branch" --recurse-submodules "$1" "$repodirname"
 	# --- Install or copy dotfiles with stow ---
 	# Install the stow ignore file First
-	sudo -u "$name" stow --verbose --dir="$1" --target="$2" "stow"
+	sudo -u "$name" stow --verbose --dir="$repodirname" --target="$2" "stow"
 	# Then install everything else
 	# The stow package list probably is going to grow see how to fix with ls and xargs ?
-	sudo -u "$name" stow --verbose --dir="$1" --target="$2" git lukeconfig i3 local X11 zsh compositor polybar
+	sudo -u "$name" stow --verbose --dir="$repodirname" --target="$2" git lukeconfig i3 local X11 zsh compositor polybar
 }
 
 systembeepoff() { dialog --infobox "Getting rid of that retarded error beep sound..." 10 50
