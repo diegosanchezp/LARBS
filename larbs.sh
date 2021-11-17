@@ -146,10 +146,10 @@ putgitrepo() { # Downloads a gitrepo $1 and places the files in $2 only overwrit
 	sudo -u "$name" git clone --recursive -b "$branch" --depth 1 --recurse-submodules "$1" "$dir" >/dev/null 2>&1
 	# --- Install or copy dotfiles with stow ---
 	# Install the stow ignore file First
-	stow --verbose --dir="$dir" --target="$2" "stow"
+	sudo -u "$name" stow --verbose --dir="$dir" --target="$2" "stow"
 	# Then install everything else
 	# The stow package list probably is going to grow see how to fix with ls and xargs ?
-	stow --verbose --dir="$dir" --target="$2" git lukeconfig i3 local X11 zsh compositor
+	sudo -u "$name" stow --verbose --dir="$dir" --target="$2" git lukeconfig i3 local X11 zsh compositor
 	}
 
 systembeepoff() { dialog --infobox "Getting rid of that retarded error beep sound..." 10 50
@@ -270,7 +270,10 @@ newperms "%wheel ALL=(ALL) ALL #LARBS
 systemctl enable lightdm
 
 # Get wallpaper
-curl --create-dirs -L --output "/home/$name/wallpapers/canyon.jpg" https://w.wallhaven.cc/full/47/wallhaven-4767ze.jpg
+sudo -u "$name" curl --create-dirs -L --output "/home/$name/wallpapers/canyon.jpg" https://w.wallhaven.cc/full/47/wallhaven-4767ze.jpg
+
+# Make polybar launch script executable
+sudo -u "$name" chmod +x "/home/$name/.config/polybar/launch.sh"
 
 # Last message! Install complete!
 finalize
