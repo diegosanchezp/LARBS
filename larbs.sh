@@ -143,9 +143,9 @@ putgitrepo() { # Downloads a gitrepo $1 and places the files in $2 only overwrit
 	[ ! -d "$2" ] && mkdir -p "$2"
 	chown "$name":wheel "$dir" "$2"
 
-	repodirname="/$2/archrice"
+	repodirname="$2/archrice"
 
-	sudo -u "$name" git clone --recursive -b "$branch" --recurse-submodules "$1" "$repodirname"
+	sudo -u "$name" git clone --recurse-submodules "$1" "$repodirname"
 	# --- Install or copy dotfiles with stow ---
 	# Install the stow ignore file First
 	sudo -u "$name" stow --verbose --dir="$repodirname" --target="$2" "stow"
