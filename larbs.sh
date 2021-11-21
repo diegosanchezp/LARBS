@@ -151,7 +151,7 @@ putgitrepo() { # Downloads a gitrepo $1 and places the files in $2 only overwrit
 	sudo -u "$name" stow --verbose --dir="$repodirname" --target="$2" "stow"
 	# Then install everything else
 	# The stow package list probably is going to grow see how to fix with ls and xargs ?
-	sudo -u "$name" stow --verbose --dir="$repodirname" --target="$2" "*/"
+	sudo -u "$name" stow --verbose --dir="$repodirname" --target="$2" git lukeconfig i3 local X11 zsh compositor polybar
 }
 
 systembeepoff() { dialog --infobox "Getting rid of that retarded error beep sound..." 10 50
